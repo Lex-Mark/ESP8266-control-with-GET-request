@@ -1,18 +1,9 @@
-/*
- *  This sketch demonstrates how to set up a simple HTTP-like server.
- *  The server will set a GPIO pin depending on the request
- *    http://server_ip/gpio/0 will set the GPIO2 low,
- *    http://server_ip/gpio/1 will set the GPIO2 high
- *  server_ip is the IP address of the ESP8266 module, will be 
- *  printed to Serial when the module is connected.
- *  https://www.whatismyip.com/
- */
-
 #include <ESP8266WiFi.h>
 
-const char* ssid = "Turbo";
-const char* password = "Salamander303";
-int led = LED_BUILTIN;
+const char* ssid = "******"; // SSID of you wi-fi network
+const char* password = "*******";// password for your wi-fi network
+int led = LED_BUILTIN; // will control the buildin led
+
 // Create an instance of the server
 // specify the port to listen on as an argument
 WiFiServer server(80);
@@ -21,7 +12,7 @@ void setup() {
   Serial.begin(115200);
   delay(10);
 
-  // prepare GPIO2
+  // prepare pin
   pinMode(led, OUTPUT);
   digitalWrite(led, 0);
   
@@ -69,9 +60,10 @@ void loop() {
   // Match the request
   int val;
   String req_val;
-  int ind=req.indexOf("msg?gpio=");
+  int ind=req.indexOf("msg?gpio="); //if request have a string like "msg?gpio=" then put it to 'ind'
   Serial.println(ind);
   
+  // if 'ind' is not empty get the char from right side of '=' and try to convert it to integer
   if (ind != -1){
     req_val = req.charAt(ind+9);
     Serial.println(req_val);
@@ -83,7 +75,7 @@ void loop() {
     return;
   }
 
-  // Set GPIO2 according to the request
+  // Set pin according to the request
   digitalWrite(led, val);
   
   client.flush();
